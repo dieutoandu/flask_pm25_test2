@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="background-color: antiquewhite;">Books_name</h1>
+    {%for i in books %}
+    <h3 style="background-color: aqua;">book_name : {{books[i]["name"]}}</h3>
+    <h4>book_money : {{books[i]["price"]}}</h4>
+    <img src='{{books[i]["image_url"]}}' alt="">
+    
+    {% endfor %}
+
+    
+</body>
+</html>

@@ -1,7 +1,32 @@
-from flask import Flask
+from flask import Flask, render_template
 from datetime import datetime
+from pm25 import get_open_data
+
+books = {
+    1: {
+        "name": "Python book",
+        "price": 299,
+        "image_url": "https://im2.book.com.tw/image/getImage?i=https://www.books.com.tw/img/CN1/136/11/CN11361197.jpg&v=58096f9ck&w=348&h=348",
+    },
+    2: {
+        "name": "Java book",
+        "price": 399,
+        "image_url": "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/087/31/0010873110.jpg&v=5f7c475bk&w=348&h=348",
+    },
+    3: {
+        "name": "C# book",
+        "price": 499,
+        "image_url": "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/036/04/0010360466.jpg&v=62d695bak&w=348&h=348",
+    },
+}
 
 app = Flask(__name__)
+
+
+@app.route("/pm25")
+def get_pm25():
+    datas = get_open_data()
+    return render_template("pm25.html", content=datas)
 
 
 @app.route("/bmi/height=<int:h>&weight=<int:w>")
@@ -11,18 +36,9 @@ def get_bmi(h, w):
 
 
 @app.route("/books")
-@app.route("/books/id=<int:id>")
 def get_book(id=None):
-    try:
-        books = {1: "Python book", 2: "Java book", 3: "Flask book"}
 
-        if id == None:
-            return books
-
-        return books[id]
-
-    except Exception as e:
-        return f"erro + : {e}"
+    return render_template("book.html", books=books)
 
 
 @app.route("/nowtime")
@@ -33,7 +49,8 @@ def nowtime():
 
 @app.route("/")
 def index():
-    return "hello Flask my name is irving !"
+    time = nowtime()
+    return render_template("index.html", time=time)
 
 
 if __name__ == "__main__":
