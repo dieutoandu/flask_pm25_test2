@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from datetime import datetime
-from pm25 import get_open_data
+from pm25 import get_mysql_data
 
 books = {
     1: {
@@ -25,8 +25,9 @@ app = Flask(__name__)
 
 @app.route("/pm25")
 def get_pm25():
-    datas = get_open_data()
-    return render_template("pm25.html", content=datas)
+    datas = get_mysql_data()
+    columns = ["site", "county", "pm25", "datacreationdate", "itemunit"]
+    return render_template("pm25.html", content=datas, columns=columns)
 
 
 @app.route("/bmi/height=<int:h>&weight=<int:w>")
