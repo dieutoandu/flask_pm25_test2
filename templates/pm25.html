@@ -109,20 +109,43 @@
       }
     }
         
-        #table_con{
-            max-height: 600px;
-            overflow-y: 30px auto;
-            border: 1px solid rgb(233, 210, 210);
-            width: 80%;
-            margin: 20px auto;
-            
-            
-        }
+    #table_con{
+        max-height: 600px;
+        overflow-y: 30px auto;
+        border: 1px solid rgb(233, 210, 210);
+        width: 80%;
+        margin: 20px auto;
+        
+        
+    }
+    a {
+      display: inline-block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    a:hover {
+      background-color: #0056b3;
+    }
         
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts@6.0.0/dist/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
     <h1>pm2.5 data</h1>
+    <a href="/update_db">UPdate_pm25</a>
+
+
+    <div id="main" style="width: 600px;height:400px; margin: auto;"></div>
+
+
     <div id="table_con">
         <table border="1">
             <thead>
@@ -146,5 +169,49 @@
             </tbody>
         </table>
     </div>
+    <script type="text/javascript">
+      var myChart = echarts.init(document.getElementById('main'));
+      
+      $.ajax(
+      {
+        url:'/avg_pm25',
+        type:'GET',
+        dataType:"json",
+        success:(result) => {
+          console.log(result);
+          var option = {
+          title: {
+            text: 'ECharts 入门示例'
+          },
+          tooltip: {},
+          legend: {
+            data: ['销量']
+          },
+          xAxis: {
+            data: result['county']
+          },
+          yAxis: {},
+          series: [
+            {
+              name: '销量',
+              type: 'bar',
+              data: result['pm25']
+            }
+          ]
+      };
+
+      
+      myChart.setOption(option);
+        },
+        
+      }
+
+
+      )
+    
+      
+      
+    </script>
 </body>
+
 </html>

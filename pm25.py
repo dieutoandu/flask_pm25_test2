@@ -56,16 +56,19 @@ def get_open_data():
 
 
 def write_sql():
+
     try:
         values = get_open_data()
         if len(values) == 0:
             print("now not any data")
             return
-        cursor.executemany(insert_table, values)
+        values = cursor.executemany(insert_table, values)
         conn.commit()
         print(f"insert data pass {len(values)}")
+        return values
     except Exception as e:
         print(e)
+    return 0
 
 
 def get_mysql_data():
@@ -90,5 +93,41 @@ def get_mysql_data():
     return None
 
 
+def get_avg_pm25():
+
+    try:
+        open_db()
+
+        sqlstr = """
+            select county,round(avg(pm25),2) from pm25 group by county;
+            """
+        cursor.execute(sqlstr)
+        datas = cursor.fetchall()
+
+        return datas
+    except Exception as e:
+        print(e)
+    finally:
+        close_db()
+
+    return None
+
+
+def write_data_to_mysql():
+
+    try:
+        open_db()
+        datas = write_sql()
+        print("update pass")
+        return len(datas)
+    except Exception as e:
+        print(e)
+        print("update not pass ")
+    finally:
+        close_db()
+    return 0
+
+
 if __name__ == "__main__":
-    print(get_mysql_data())
+    datas = get_avg_pm25()
+    print(datas)
