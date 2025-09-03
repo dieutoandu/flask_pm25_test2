@@ -84,7 +84,14 @@ def get_mysql_data():
         cursor.execute(sqlstr)
         datas = cursor.fetchall()
 
-        return datas
+        sqlstr = """
+            select distinct(county) from pm25;
+
+        """
+        cursor.execute(sqlstr)
+        county = cursor.fetchall()
+
+        return datas, county
     except Exception as e:
         print(e)
     finally:
@@ -151,4 +158,4 @@ def get_pm25_by_county(county):
 
 
 if __name__ == "__main__":
-    print(get_avg_pm25())
+    print(get_mysql_data())

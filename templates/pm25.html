@@ -9,7 +9,7 @@
       text-align: center;
       font-family: Arial, sans-serif;
       margin: 20px;
-      background-color: rgb(161, 196, 180);
+      background-color: rgb(149, 189, 171);
     }
 
     h1 {
@@ -160,11 +160,13 @@
     <h1>pm2.5 data</h1>
     <a href="/update_db">UPdate_pm25</a>
 
-
-    <div id="main" style="width: 600px;height:400px; margin: auto;"></div>
-
-    <div id="main_1" style="width: 600px;height:400px; margin: auto;" hidden></div>
-
+    <div style="background-color: #a8a8aa;">
+      <div id="main" style="width: 600px;height:400px; margin: auto;"></div>
+    </div>
+    <br>
+    <div style="background-color: #a8a8aa;">
+      <div id="main_1" style="width: 600px;height:400px; margin: auto;" hidden></div>
+    </div>
     <label for="countySelect">chocies county</label>
     <select name="countySelect" id="countySelect" class="custom-select">
       {% for i in county %}
@@ -225,12 +227,19 @@
 
 
       function drawChart(chart ,url ,title, xKey ,yKey,color){
+
+        chart.showLoading();
         $.ajax(
         {
           url:url,
           type:'GET',
           dataType:"json",
+          error:()=>{
+            alert("read data erro ,please try again")
+          }
+          ,
           success:(result) => {
+            chart.hideLoading();
             console.log(result);
             var option = {
             title: {

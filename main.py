@@ -63,8 +63,7 @@ def update_data():
 
 @app.route("/pm25")
 def get_pm25():
-    datas = get_mysql_data()
-    countyEl = get_avg_pm25()
+    datas, countyEl = get_mysql_data()
     county = [i[0] for i in countyEl]
     columns = ["site", "county", "pm25", "datacreationdate", "itemunit"]
 
