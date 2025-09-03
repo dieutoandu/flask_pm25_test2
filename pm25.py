@@ -151,4 +151,4 @@ def get_pm25_by_county(county):
 
 
 if __name__ == "__main__":
-    print(get_pm25_by_county("臺北市"))
+    print(get_avg_pm25())

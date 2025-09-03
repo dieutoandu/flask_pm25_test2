@@ -64,8 +64,11 @@ def update_data():
 @app.route("/pm25")
 def get_pm25():
     datas = get_mysql_data()
+    countyEl = get_avg_pm25()
+    county = [i[0] for i in countyEl]
     columns = ["site", "county", "pm25", "datacreationdate", "itemunit"]
-    return render_template("pm25.html", content=datas, columns=columns)
+
+    return render_template("pm25.html", content=datas, columns=columns, county=county)
 
 
 @app.route("/bmi/height=<int:h>&weight=<int:w>")

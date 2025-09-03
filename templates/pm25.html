@@ -46,6 +46,7 @@
       color: white;
       border: none;
       cursor: pointer;
+      border-radius: 10px;
     }
 
     button:hover {
@@ -132,7 +133,24 @@
     a:hover {
       background-color: #0056b3;
     }
-        
+    .custom-select {
+      padding: 10px;
+      border: 2px solid #007bff;
+      border-radius: 5px;
+      background-color: white;
+      font-size: 16px;
+      color: #333;
+      appearance: none; /* Remove default styling in some browsers */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      width: 400px;
+      text-align: center;
+    }
+
+    .custom-select:focus {
+      border-color: #0056b3;
+      outline: none;
+    }
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/echarts@6.0.0/dist/echarts.min.js"></script>
@@ -145,6 +163,19 @@
 
     <div id="main" style="width: 600px;height:400px; margin: auto;"></div>
 
+    <div id="main_1" style="width: 600px;height:400px; margin: auto;" hidden></div>
+
+    <label for="countySelect">chocies county</label>
+    <select name="countySelect" id="countySelect" class="custom-select">
+      {% for i in county %}
+      <option value="{{i}}">{{i}}</option>
+      {% endfor %}
+      
+
+
+    </select>
+
+    <button id="loadcounty" onclick='drawCountyChart()'>START</button>
 
     <div id="table_con">
         <table border="1">
@@ -170,46 +201,72 @@
         </table>
     </div>
     <script type="text/javascript">
-      var myChart = echarts.init(document.getElementById('main'));
+      const myChart = echarts.init(document.getElementById('main'));
+      const myChart_1 = echarts.init(document.getElementById('main_1'));
+      const countyEl=document.getElementById("main_1")
+      const countySelectEl=document.querySelector('#countySelect')
       
-      $.ajax(
-      {
-        url:'/avg_pm25',
-        type:'GET',
-        dataType:"json",
-        success:(result) => {
-          console.log(result);
-          var option = {
-          title: {
-            text: 'ECharts 入门示例'
-          },
-          tooltip: {},
-          legend: {
-            data: ['销量']
-          },
-          xAxis: {
-            data: result['county']
-          },
-          yAxis: {},
-          series: [
-            {
-              name: '销量',
-              type: 'bar',
-              data: result['pm25']
-            }
-          ]
-      };
+      drawChart(myChart,'/avg_pm25',"all county pm2.5 mean",'county','pm25','red')
+      // drawChart(myChart_1,'/county_pm25/新北市',"site pm2.5 mean",'site','pm25')
 
+      console.log(countySelectEl);
       
-      myChart.setOption(option);
-        },
+
+      function drawCountyChart(){
+        let county=countySelectEl.value;
+        countyEl.hidden=false;
+      
+        console.log(county);
+        drawChart(myChart_1,`/county_pm25/${county}`,"site pm2.5 mean",'site','pm25','blue')
         
       }
 
 
-      )
+
+
+      function drawChart(chart ,url ,title, xKey ,yKey,color){
+        $.ajax(
+        {
+          url:url,
+          type:'GET',
+          dataType:"json",
+          success:(result) => {
+            console.log(result);
+            var option = {
+            title: {
+              text: title
+            },
+            tooltip: {},
+            legend: {
+              data: ['销量']
+            },
+            xAxis: {
+              data: result[xKey]
+            },
+            yAxis: {},
+            series: [
+              
+              {
+                  itemStyle: {
+              color: color
+            },
+                name: '销量',
+                type: 'bar',
+                data: result[yKey]
+              }
+            ]
+        };
+
+        
+        chart.setOption(option);
+          },
+          
+        }
+
+
+        )
     
-      
+      }
       
     </script>
 </body>
