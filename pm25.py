@@ -62,7 +62,7 @@ def write_sql():
         if len(values) == 0:
             print("now not any data")
             return
-        values = cursor.executemany(insert_table, values)
+        values = cursor.executemany(values, (insert_table,))
         conn.commit()
         print(f"insert data pass {len(values)}")
         return values
@@ -128,6 +128,27 @@ def write_data_to_mysql():
     return 0
 
 
+def get_pm25_by_county(county):
+    try:
+        open_db()
+
+        sqlstr = """
+        select site,pm25,datacreationdate from pm25 
+        where county = %s 
+        and datacreationdate=(select max(datacreationdate) from pm25);
+
+        """
+        cursor.execute(sqlstr, (county,))
+        datas = cursor.fetchall()
+
+        return datas
+    except Exception as e:
+        print(e)
+    finally:
+        close_db()
+
+    return None
+
+
 if __name__ == "__main__":
-    datas = get_avg_pm25()
-    print(datas)
+    print(get_pm25_by_county("臺北市"))

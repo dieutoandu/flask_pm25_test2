@@ -1,6 +1,6 @@
 from flask import Flask, render_template, Response
 from datetime import datetime
-from pm25 import get_mysql_data, write_data_to_mysql, get_avg_pm25
+from pm25 import get_mysql_data, write_data_to_mysql, get_avg_pm25, get_pm25_by_county
 import json
 
 
@@ -23,6 +23,24 @@ books = {
 }
 
 app = Flask(__name__)
+
+
+@app.route("/county_pm25/<county>")
+def get_county_pm25(county):
+    all_site = get_pm25_by_county(county)
+
+    if len(all_site) == 0:
+        return Response(json.dumps({"all_site": "can't not get data"}))
+    site = [i[0] for i in all_site]
+    pm25 = [float(i[1]) for i in all_site]
+    data_time = all_site[0][2].strftime("%Y-%m-%d %H:%M:%S")
+    return Response(
+        json.dumps(
+            {"all_site": len(site), "site": site, "pm25": pm25, "time": data_time},
+            ensure_ascii=False,
+        ),
+        mimetype="application/json",
+    )
 
 
 @app.route("/avg_pm25")
