@@ -208,7 +208,7 @@
       const countyEl=document.getElementById("main_1")
       const countySelectEl=document.querySelector('#countySelect')
       
-      drawChart(myChart,'/avg_pm25',"all county pm2.5 mean",'county','pm25','red')
+      drawChart(myChart,'/avg_pm25',"all county pm2.5 mean",'county','pm25','red','bar')
       // drawChart(myChart_1,'/county_pm25/新北市',"site pm2.5 mean",'site','pm25')
 
       console.log(countySelectEl);
@@ -219,14 +219,14 @@
         countyEl.hidden=false;
       
         console.log(county);
-        drawChart(myChart_1,`/county_pm25/${county}`,"site pm2.5 mean",'site','pm25','blue')
+        drawChart(myChart_1,`/county_pm25/${county}`,"site pm2.5 mean",'site','pm25','blue','line')
         
       }
 
 
 
 
-      function drawChart(chart ,url ,title, xKey ,yKey,color){
+      function drawChart(chart ,url ,title, xKey ,yKey,color,type_1){
 
         chart.showLoading();
         $.ajax(
@@ -260,7 +260,8 @@
               color: color
             },
                 name: '销量',
-                type: 'bar',
+                type: type_1,
+                smooth: true,
                 data: result[yKey]
               }
             ]

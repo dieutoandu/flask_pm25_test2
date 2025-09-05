@@ -61,6 +61,7 @@ def update_data():
     return f"datas : {datas}"
 
 
+@app.route("/")
 @app.route("/pm25")
 def get_pm25():
     datas, countyEl = get_mysql_data()
@@ -88,11 +89,10 @@ def nowtime():
     return time
 
 
-@app.route("/")
 def index():
     time = nowtime()
     return render_template("index.html", time=time)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
